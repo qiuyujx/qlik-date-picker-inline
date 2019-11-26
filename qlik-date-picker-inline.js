@@ -38,7 +38,6 @@ function (qlik, Lightpick, moment) {
 		},
 		paint: function ($element, layout) {
 
-			// console.log("in paint")
 			var self = this
 			var allDates = layout.qListObject.qDataPages[0].qMatrix
 			var minDate = moment(allDates[0][0].qText, "D/M/YYYY")
@@ -48,13 +47,15 @@ function (qlik, Lightpick, moment) {
 			// console.log("min date: ", minDate)
 			// console.log("max date: ", maxDate)
 
-			//add your rendering code here
+			// add input field to display data range
 			$element.html( '<input type="text" id="datepicker" size="35" /> <br />' );
 
+			// helper function: check if a date falls in a date range
 			var checkDateInBetween = function(searchDate, start, end) {
 				return searchDate.isBetween(start, end, 'date', '[]')
 			}
 			
+			// Initialise the picker
 			var picker = new Lightpick({
 				inline: true,
 				singleDate: false,
@@ -71,7 +72,8 @@ function (qlik, Lightpick, moment) {
 					months: true
 				},
 				onSelect: function(start, end){
-					if (start && end) {
+					if (!start || !end) return;
+					if ((typeof start._i == 'number') && (typeof end._i == 'number')) {
 
 						// Convert start & end moment to date string
 						var startDateString = start.format('D/M/YYYY')
